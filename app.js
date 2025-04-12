@@ -6,6 +6,7 @@ import GetTopics from './routes/GetTopics.js';
 import GetYt from './routes/GetYt.js';
 import GetDoc from './routes/GetDoc.js';
 import GetAi from './routes/GetAi.js';
+import GetProjects from './routes/GetProjects.js'
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use('/', GetTopics);
 app.use('/', GetYt);
 app.use('/', GetDoc);
 app.use('/', GetAi);
+app.use('/', GetProjects);
 
 export default app;
