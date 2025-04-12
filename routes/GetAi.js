@@ -10,7 +10,7 @@ app.use(cors());
 dotenv.config();
 
 const router = express.Router();
-
+router.use(express.json());
 const API_KEY = process.env.API_KEY;
 const MODEL = 'gemini-2.0-flash';
 const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
@@ -39,7 +39,7 @@ async function generateAIDoc(topic) {
       console.log(`🔍 [${topic}] Raw Gemini Response:\n`, JSON.stringify(data, null, 2));
   
       const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  
+      
       return {
         topic,
         content: text || 'No AI response received.',
@@ -54,14 +54,18 @@ async function generateAIDoc(topic) {
   }
   
 
-router.post('/generate-ai-docs', async (req, res) => {
-  const topics = req.body.topics || [];
-  if (!Array.isArray(topics) || topics.length === 0) {
-    return res.status(400).json({ error: 'Missing or invalid topics array.' });
-  }
-
-  const results = await Promise.all(topics.map(generateAIDoc));
-  res.json({ ai_documentation: results });
-});
-
-export default router;
+  router.post('/generate-ai-docs', async (req, res) => {
+    const topics = req.body.topics || [];
+    if (!Array.isArray(topics) || topics.length === 0) {
+      return res.status(400).json({ error: 'Missing or invalid topics array.' });
+    }
+  
+    const results = await Promise.all(topics.map(generateAIDoc));
+    
+    // ✅ Explicitly set CORS header here (in case Vercel behaves oddly with nested routers)
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.json({ ai_documentation: results });
+  });
+  
+  export default router;
+  

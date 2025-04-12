@@ -12,6 +12,14 @@ const app = express();
 app.use(cors()); // ✅ allow all origins by default
 app.use(express.json());
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*'); // or set specific domains
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
+  
+
 app.use('/', GetKnowledge);
 app.use('/', GetTopics);
 app.use('/', GetYt);
