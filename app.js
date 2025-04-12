@@ -1,11 +1,17 @@
 import express from 'express';
 import GetKnowledge from './routes/GetKnowledge.js'; 
+import GetTopics from './routes/GetTopics.js'
+import GetYt from './routes/GetYt.js'
+import GetDoc from './routes/GetDoc.js'
 
 const app = express();
 
 app.use(express.json());
 
 app.use('/', GetKnowledge);
+app.use('/', GetTopics);
+app.use('/', GetYt);
+app.use('/', GetDoc);
 
 // const port = process.env.PORT || 3000;
 
