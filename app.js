@@ -1,16 +1,16 @@
 import express from 'express';
+import GetKnowledge from './routes/GetKnowledge.js'; 
 
 const app = express();
-const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('✅ This route is fast and working!');
-});
+app.use(express.json());
 
-app.use('/', router);
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`🚀 Server running locally at http://localhost:${port}`);
-  });
+app.use('/', GetKnowledge);
+
+// const port = process.env.PORT || 3000;
+
+// app.listen(port, () => {
+//   console.log(`🚀 Server running locally at http://localhost:${port}`);
+// });
 
 export default app;
