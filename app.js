@@ -1,15 +1,14 @@
-import express from "express";
+import express from 'express';
 
 const app = express();
+const router = express.Router();
 
-// Middleware for parsing request body
-app.use(express.json());
-
-app.get('/', function (_, res) {
-
-    res.send({
-        message: "working"
-    });
+// Basic GET route
+router.get('/', (req, res) => {
+  res.send('Hello from Express Router in app.js!');
 });
+
+// Use the router
+app.use('/', router);
 
 export default app;
