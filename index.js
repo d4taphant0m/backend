@@ -1,27 +1,17 @@
 import express from 'express';
+import serverless from 'serverless-http';
 
 const app = express();
-const port = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Home route
+// Basic GET route
 app.get('/', (req, res) => {
-  res.send('Hello World from Express + ES Modules!');
+  res.send('Hello from Express running as a Vercel serverless function!');
 });
 
-// Catch-all route
+// Optional: Catch-all route
 app.all('*', (req, res) => {
   res.status(404).send(`Route ${req.originalUrl} not found.`);
 });
 
-// Start server only if run directly (local dev)
-if (import.meta.url === `file://${process.argv[1]}`) {
-  app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
-  });
-}
-
-export default app;
+// Export the app for Vercel
+export default serverless(app);
