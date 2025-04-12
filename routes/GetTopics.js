@@ -9,8 +9,6 @@ const router = express.Router();
 const API_KEY = process.env.API_KEY;
 const MODEL = 'gemini-2.0-flash';
 const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
-
-// Use POST instead of GET to receive JSON body
 router.get('/get-subtopics', async (req, res) => {
   const { topic } = req.body;
 
