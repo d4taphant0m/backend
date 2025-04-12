@@ -16,15 +16,21 @@ const MODEL = 'gemini-2.0-flash';
 const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
 
 async function generateAIDoc(topic) {
-    const prompt = `You are an expert technical writer. Generate structured and informative documentation for the topic "${topic}". Format it using these sections:
+    const prompt = `
+  You are a helpful technical explainer. Write short, simple, and easy-to-understand documentation (around 30–35 lines total) for the topic: "${topic}".
+  
+  Use the following structure. Keep each section short (10-11 lines max):
   
   Topic: ${topic}
   
-  1. **Introduction** - What is this topic? Why is it important?
-  2. **Key Concepts** - Important terms or ideas people should understand.
-  3. **Common Tools or Libraries**
-  4. **Use Cases**
-  5. **Getting Started Tips**`;
+  1. **Introduction** – What is this topic? Why does it matter?
+  2. **Key Concepts** – List and briefly explain 2–3 important ideas.
+  3. **Common Tools or Libraries** – Name and explain 2–3 common tools.
+  4. **Use Cases** – Give 2–3 practical examples of how this is used.
+  5. **Getting Started Tips** – Simple tips for a beginner to start learning.
+  
+  Use markdown formatting with headings and bullet points. Be concise and beginner-friendly.
+  `;
   
     try {
       const response = await fetch(URL, {
@@ -36,13 +42,22 @@ async function generateAIDoc(topic) {
       });
   
       const data = await response.json();
-      console.log(`🔍 [${topic}] Raw Gemini Response:\n`, JSON.stringify(data, null, 2));
+      console.log(`🔍 [${topic}] Full Gemini Response:\n`, JSON.stringify(data, null, 2));
   
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      
+      if (!data?.candidates || data.candidates.length === 0) {
+        return {
+          topic,
+          content: '❌ Gemini API returned no candidates.',
+          error: 'Empty response from Gemini.',
+        };
+      }
+  
+      const parts = data.candidates[0]?.content?.parts;
+      const text = parts?.[0]?.text || '❌ No text in response parts.';
+  
       return {
         topic,
-        content: text || 'No AI response received.',
+        content: text,
       };
     } catch (err) {
       console.error(`❌ [${topic}] Error:`, err.message);
@@ -53,19 +68,22 @@ async function generateAIDoc(topic) {
     }
   }
   
+  
 
   router.post('/generate-ai-docs', async (req, res) => {
+    console.log('📥 /generate-ai-docs HIT');
     const topics = req.body.topics || [];
+    console.log('🧠 Topics:', topics);
+  
     if (!Array.isArray(topics) || topics.length === 0) {
       return res.status(400).json({ error: 'Missing or invalid topics array.' });
     }
   
     const results = await Promise.all(topics.map(generateAIDoc));
-    
-    // ✅ Explicitly set CORS header here (in case Vercel behaves oddly with nested routers)
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.json({ ai_documentation: results });
   });
+  
   
   export default router;
   
