@@ -16,7 +16,7 @@ async function getStructuredTopicAnalysis(topic, priorKnowledgeParagraph) {
   
 }
 
-router.get('/getknowledge', async (req,res)=>{
+router.post('/getknowledge', async (req,res)=>{
     const {topic ,knowledgepara} =  req.body;
     const prompt = `You are an AI assistant that helps people learn about technical topics by analyzing what they already know and giving personalized study advice.
 
