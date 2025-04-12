@@ -34,7 +34,7 @@ async function fetchYouTubeVideosForTopic(topic, maxResults = 3) {
   }
 }
 
-router.get('/getvideos', async (req, res) => {
+router.post('/getvideos', async (req, res) => {
   const topics = req.body.topics || [];
   const maxPerTopic = req.body.max || 3;
 
