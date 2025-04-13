@@ -8,6 +8,7 @@ import GetDoc from './routes/GetDoc.js';
 import GetAi from './routes/GetAi.js';
 import GetProjects from './routes/GetProjects.js'
 import Generateque from './routes/Generateque.js'
+import Getroad from './routes/Getroad.js'
 
 const app = express();
 
@@ -29,5 +30,6 @@ app.use('/', GetDoc);
 app.use('/', GetAi);
 app.use('/', GetProjects);
 app.use('/', Generateque);
+app.use('/', Getroad);
 
 export default app;
